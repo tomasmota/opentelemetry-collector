@@ -1,13 +1,12 @@
-// Copyright The OpenTelemetry Authors
-// SPDX-License-Identifier: Apache-2.0
-
 package otelcol // import "go.opentelemetry.io/collector/otelcol"
 
 import (
 	"errors"
 	"flag"
+	"fmt"
 
 	"github.com/spf13/cobra"
+	"go.uber.org/zap"
 
 	"go.opentelemetry.io/collector/featuregate"
 )
@@ -42,6 +41,7 @@ func NewCommand(set CollectorSettings) *cobra.Command {
 }
 
 func updateSettingsUsingFlags(set *CollectorSettings, flags *flag.FlagSet) error {
+	fmt.Printf("\n\n logging options nil?: %+v\n\n", set.LoggingOptions == nil)
 	if set.ConfigProvider == nil {
 		resolverSet := &set.ConfigProviderSettings.ResolverSettings
 		configFlags := getConfigFlag(flags)
@@ -56,6 +56,8 @@ func updateSettingsUsingFlags(set *CollectorSettings, flags *flag.FlagSet) error
 		// TODO: Remove this after CollectorSettings.ConfigProvider is removed and instead
 		// do it in the builder.
 		if len(resolverSet.Providers) == 0 && len(resolverSet.Converters) == 0 {
+			zapCfg := zap.NewProductionConfig()
+			logger, err := zapCfg.Build(options...)
 			set.ConfigProviderSettings = newDefaultConfigProviderSettings(resolverSet.URIs)
 		}
 	}

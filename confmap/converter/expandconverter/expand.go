@@ -24,10 +24,10 @@ type converter struct {
 // New returns a confmap.Converter, that expands all environment variables for a given confmap.Conf.
 //
 // Notice: This API is experimental.
-func New(_ confmap.ConverterSettings) confmap.Converter {
+func New(set confmap.ConverterSettings) confmap.Converter {
 	return converter{
 		loggedDeprecations: make(map[string]struct{}),
-		logger:             zap.NewNop(), // TODO: pass logger in ConverterSettings
+		logger:             set.Logger,
 	}
 }
 

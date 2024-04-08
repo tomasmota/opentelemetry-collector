@@ -2,7 +2,7 @@ extensions:
   zpages:
     endpoint: localhost:55679
 
-receivers:
+receiers:
   otlp:
     protocols:
       grpc:
